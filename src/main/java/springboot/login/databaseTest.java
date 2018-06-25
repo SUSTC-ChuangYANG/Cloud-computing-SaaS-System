@@ -388,7 +388,7 @@ public class databaseTest {
     }
 
     @Test
-    public void creatTestData(){
+    public void createTestData(){
         createAdmin();
         createTeacher();
         creatCourse();
