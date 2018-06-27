@@ -16,7 +16,7 @@ public class Course implements Serializable {
 
 
     /* course name information */
-    @Column(name = "course_code")
+    @Column(name = "course_code",unique = true)
     private String course_code;  // for example, cs302
 
     /* course name information */

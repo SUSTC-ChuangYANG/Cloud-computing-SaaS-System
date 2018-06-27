@@ -10,4 +10,5 @@ public interface CourseRepository extends CrudRepository<Course, Long> {
     Course  findById(long id);
     List<Course> findByTeacherId(long id);
     List<Course> findAll();
+
 }

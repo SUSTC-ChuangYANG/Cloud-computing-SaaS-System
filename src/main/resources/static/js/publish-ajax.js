@@ -50,7 +50,7 @@ var DatatableRemoteAjaxDemo = function () {
 
     // basic demo
     var demo = function () {
-
+        var base_link = "http://localhost:8080/teacher/my_course/";
         var datatable = $('.m_datatable').mDatatable({
             // datasource definition
             data: {
@@ -105,11 +105,23 @@ var DatatableRemoteAjaxDemo = function () {
                 input: $('#generalSearch'),
             },
 
+
+
             // columns definition
             columns: [
                 {
+                    field: 'course_id',
+                    title: 'Course ID',
+                    // sortable: 'asc', // default sort
+                    filterable: false, // disable or enable filtering
+                    width: 100,
+                    textAlign: 'center',
+                    // basic templating support for column rendering,
+                    //template: '{{source_id}} - {{source_name}}',
+                },
+                {
                     field: 'course_code',
-                    title: 'Exam ID',
+                    title: 'Course Code',
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
                     width: 100,
@@ -118,9 +130,10 @@ var DatatableRemoteAjaxDemo = function () {
                     //template: '{{source_id}} - {{source_name}}',
                 }, {
                     field: 'course_name',
-                    title: 'Exam Name',
+                    title: 'Course Name',
                     width: 200,
                     textAlign: 'center',
+
                 // }, {
                 //     field: 'exam_date',
                 //     title: 'Exam Time',
@@ -151,7 +164,6 @@ var DatatableRemoteAjaxDemo = function () {
                 //         };
                 //         return '<span class="m-badge m-badge--' + status[row.priority].state + ' badge--dot"></span>';
                 //     },
-                }
                 // ,
                 // {
                 //     field: 'fault_level',
@@ -202,21 +214,32 @@ var DatatableRemoteAjaxDemo = function () {
                 //         finish = (finish * 100).toFixed(2);
                 //         return finish + '%';
                 //     },
-                // }, {
-                //     field: 'Actions',
-                //     width: 75,
-                //     title: 'Download',
-                //     sortable: false,
-                //     overflow: 'visible',
-                //     textAlign: 'center',
-                //     template: function (row) {
-                //         return '<div>\
-					// 	<a href="/download/' + row.source_name + '.zip" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
-					// 	 m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details"><i class="flaticon-download"></i>\
-					// 	</a></div>';
-                //     },
+                }, {
+                    field: 'Actions',
+                    width: 75,
+                    title: 'Management',
+                    sortable: false,
+                    overflow: 'visible',
+                    textAlign: 'center',
+                    template: function (raw) {
+                    return  "<a class='btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air' href='"
+                             +base_link+raw.course_id + "'>\
+                             <span>\
+                             <i class='la la-anchor'></i>\
+                             <span>\
+                              Manage\
+                             </span>\
+                        </a>";
+                        // return '<div>\
+						// <a href="/download/' + row.source_name + '.zip" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
+						//  m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details"><i class="flaticon-download"></i>\
+						// </a></div>';
+                    }
 
-                ],
+                }
+
+
+            ],
         });
 
         // var query = datatable.getDataSourceQuery();
