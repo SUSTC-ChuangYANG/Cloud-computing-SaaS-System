@@ -3,6 +3,107 @@
 var DatatableRemoteAjaxDemo = function () {
     //== Private functions
 
+    var changeInfo = function () {
+
+        var login = $('#m_login');
+
+        var showErrorMsg = function (form, type, msg) {
+            var alert = $('<div class="m-alert m-alert--outline alert alert-' + type + ' alert-dismissible" role="alert">\
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>\
+			<span></span>\
+		</div>');
+
+            form.find('.alert').remove();
+            alert.prependTo(form);
+            alert.animateClass('fadeIn animated');
+            alert.find('span').html(msg);
+        }
+
+        var AdminRegs = function () {
+            $('#submitReg').click(function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var form = $(this).closest('form');
+
+                form.validate({
+                    rules: {
+
+                        // username: {
+                        //     required: true,
+                        // },
+
+                        // email: {
+                        //     required: true,
+                        //     email: true
+                        // },
+                        //
+                        // password: {
+                        //     required: true
+                        // },
+                        //
+                        personstatus: {
+                            required: true
+                        },
+
+                        phonenumber: {
+                            required: true
+                        }
+
+                    }
+                });
+
+                if (!form.valid()) {
+                    return;
+                }
+
+                btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
+
+                var Phonenumber = document.getElementById("phnonen").value;
+
+                var Personstatus = document.getElementById("persons").value;
+
+                //var uPd = document.getElementById("u_password").value;
+
+                form.ajaxSubmit({
+                    type: "POST",
+                    url: "/someurl/"+Phonenumber+Personstatus,//************************************************ need to change for the certain URL
+                    success: function (json) {
+                        if (true) {
+                            setTimeout(function () {
+                                swal({
+                                    title: "Success!",
+                                    text: "You have successfully change your information",
+                                    type: "success"
+                                }).then(function () {
+                                    window.location.reload();
+                                })
+                                ;
+                            }, 1000);
+                        } else {
+                            setTimeout(function () {
+                                swal({
+                                    title: "Error!",
+                                    text: json.message,
+                                    type: "error"
+                                }).then(function () {
+                                    var signInForm = login.find('#mainForm');
+                                    signInForm.clearForm();
+                                    signInForm.validate().resetForm();
+                                });
+                            }, 1000);
+                        }
+                    }
+                });
+            });
+        }
+
+        return {
+            init: function () {
+                AdminRegs();
+            },
+        };
+    }();
+
     var daterangepickerInit = function () {
 
         if ($('#m_dashboard_daterangepicker').length == 0) {
@@ -50,7 +151,7 @@ var DatatableRemoteAjaxDemo = function () {
 
     // basic demo
     var demo = function () {
-        var base_link = "http://localhost:8080/teacher/my_course/";
+        var base_link = "http://10.20.111.242:8080/teacher/my_course/";
         var datatable = $('.m_datatable').mDatatable({
             // datasource definition
             data: {
@@ -59,7 +160,7 @@ var DatatableRemoteAjaxDemo = function () {
                     read: {
                         // sample GET method
                         method: 'GET',
-                        url: "http://localhost:8080/teacher/my_course",
+                        url: "http://10.20.111.242:8080/teacher/my_course",
                         map: function (raw) {
                             // sample data mapping
                             //var temp = eval(raw);
@@ -133,90 +234,9 @@ var DatatableRemoteAjaxDemo = function () {
                     title: 'Course Name',
                     width: 200,
                     textAlign: 'center',
-
-                // }, {
-                //     field: 'exam_date',
-                //     title: 'Exam Time',
-                //     type: 'date',
-                //     textAlign: 'center',
-                //     template: function (row) {
-                //         var date = new Date(row.publish_date * 1000);//如果date为13位不需要乘1000
-                //         var Y = date.getFullYear() + '-';
-                //         var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-                //         var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
-                //         var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
-                //         var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
-                //         var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
-                //         return Y + M + D + h + m + s;
-                //
-                //     },
-
-                // {
-                //     field: 'grade',
-                //     title: 'Grade',
-                //     textAlign: 'center',
-                //     // callback function support for column rendering
-                //     template: function (row) {
-                //         var status = {
-                //             1: {'state': 'success'},
-                //             2: {'state': 'warning'},
-                //             3: {'state': 'danger'},
-                //         };
-                //         return '<span class="m-badge m-badge--' + status[row.priority].state + ' badge--dot"></span>';
-                //     },
-                // ,
-                // {
-                //     field: 'fault_level',
-                //     title: 'Fault level',
-                //     textAlign: 'center',
-                //     // callback function support for column rendering
-                //     template: function (row) {
-                //         var status = {
-                //             0: {'title': 'None', 'state': 'success'},
-                //             1: {'title': 'Low', 'state': 'warning'},
-                //             2: {'title': 'High', 'state': 'danger'},
-                //         };
-                //         return '<span class="m--font-bold m--font-' + status[row.fault_level].state + '">' + status[row.fault_level].title + '</span>';
-                //     },
-                // },
-                // {
-                //     field: 'num_finished',
-                //     title: 'Status',
-                //     textAlign: 'center',
-                //     // callback function support for column rendering
-                //     template: function (row) {
-                //         var status = {
-                //             1: {'title': 'Done', 'class': 'm-badge--brand'},
-                //             2: {'title': 'Labeling', 'class': ' m-badge--metal'},
-                //             0: {'title': 'New', 'class': ' m-badge--primary'},
-                //         };
-                //         var finish = row.num_finished / row.number;
-                //         if (finish < 1 && finish > 0) {
-                //             return '<span class="m-badge ' + status[2].class +
-                //                 ' m-badge--wide">' + status[2].title + '</span>';
-                //         }
-                //         if (finish == 0) {
-                //             return '<span class="m-badge ' + status[0].class +
-                //                 ' m-badge--wide">' + status[0].title + '</span>';
-                //         }
-                //         if (finish == 1) {
-                //             return '<span class="m-badge ' + status[1].class +
-                //                 ' m-badge--wide">' + status[1].title + '</span>';
-                //         }
-                //
-                //     },
-                // }, {
-                //     field: 'per_finished',
-                //     title: 'Percentage',
-                //     textAlign: 'center',
-                //     template: function (row) {
-                //         var finish = row.per_finished;
-                //         finish = (finish * 100).toFixed(2);
-                //         return finish + '%';
-                //     },
                 }, {
                     field: 'Actions',
-                    width: 75,
+                    width: 200,
                     title: 'Management',
                     sortable: false,
                     overflow: 'visible',
@@ -230,10 +250,6 @@ var DatatableRemoteAjaxDemo = function () {
                               Manage\
                              </span>\
                         </a>";
-                        // return '<div>\
-						// <a href="/download/' + row.source_name + '.zip" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
-						//  m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details"><i class="flaticon-download"></i>\
-						// </a></div>';
                     }
 
                 }
@@ -242,28 +258,6 @@ var DatatableRemoteAjaxDemo = function () {
             ],
         });
 
-        // var query = datatable.getDataSourceQuery();
-        //
-        // $('#m_form_status').on('change', function () {
-        //     // shortcode to datatable.getDataSourceParam('query');
-        //     var query = datatable.getDataSourceQuery();
-        //     query.priority = $(this).val().toLowerCase();
-        //     // shortcode to datatable.setDataSourceParam('query', query);
-        //     datatable.setDataSourceQuery(query);
-        //     datatable.load();
-        // }).val(typeof query.priority !== 'undefined' ? query.priority : '');
-        //
-        // $('#m_form_type').on('change', function () {
-        //     // shortcode to datatable.getDataSourceParam('query');
-        //     var query = datatable.getDataSourceQuery();
-        //     query.fault_level = $(this).val().toLowerCase();
-        //     // shortcode to datatable.setDataSourceParam('query', query);
-        //     datatable.setDataSourceQuery(query);
-        //     datatable.load();
-        // }).val(typeof query.fault_level !== 'undefined' ? query.fault_level : '');
-        //
-        // $('#m_form_status, #m_form_type').selectpicker();
-
     };
 
     return {
@@ -271,6 +265,8 @@ var DatatableRemoteAjaxDemo = function () {
         init: function () {
             daterangepickerInit();
             demo();
+            changeInfo();
+
         },
     };
 }();

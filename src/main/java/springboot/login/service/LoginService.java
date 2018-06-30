@@ -57,18 +57,6 @@ public class LoginService {
     }
 
 
-    public boolean verifyLogin(User user){
 
-//      List<User> userList = loginDao.findByUsernameAndPassword(user.getUsername(), user.getPassword());
-//      if(userList.size()>0){
-//          return true;
-//      }
-       if(user.getUsername().equals("chuang") && user.getPassword().equals("123456")){
-           return true;
-       }else{
-           return false;
-       }
-
-  }
 
 }

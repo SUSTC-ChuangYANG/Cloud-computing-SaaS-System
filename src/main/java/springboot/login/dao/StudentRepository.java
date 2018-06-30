@@ -10,8 +10,10 @@ import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student , Long> {
     Student findById(long id);
-    Long deleteById(long id);
+    Student findByEmail(String email);
+    Long deleteBySid(long id);
     List<Student> findByEmailAndPassword(String email, String password);
+    Student findBySid(long sid);
 //    List<Course> findCourseByStudent(long id);
 
 }

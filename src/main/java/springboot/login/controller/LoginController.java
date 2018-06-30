@@ -37,6 +37,11 @@ public class LoginController {
         return "login";
     }
 
+    @GetMapping("/mainpage")
+    public String mainpage(){
+        return "mainpage";
+    }
+
     @PostMapping("/loginVerify")
     public String loginVerify(String password, String email,Integer login_as,HttpSession session){
 
@@ -64,16 +69,15 @@ public class LoginController {
 
         if (verify) {
             session.setAttribute(WebSecurityConfig.SESSION_KEY, email);
-
             if(login_as==0){
                 session.setAttribute(WebSecurityConfig.SESSION_ROLE,"admin");
-                return "index";
+                return "index_admin";
             }else if(login_as==1){
                 session.setAttribute(WebSecurityConfig.SESSION_ROLE,"teacher");
-                return "index";
+                return "index_teacher";
             }else if(login_as==2){
                 session.setAttribute(WebSecurityConfig.SESSION_ROLE,"student");
-                return "student_home_page";
+                return "index_student";
             }else{
                 return "redirect:/login";
             }
@@ -82,10 +86,10 @@ public class LoginController {
             return "redirect:/login";
         }
     }
-//
-//    @GetMapping("/logout")
-//    public String logout(HttpSession session){
-//        session.removeAttribute(WebSecurityConfig.SESSION_KEY);
-//        return "redirect:/login";
-//    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.removeAttribute(WebSecurityConfig.SESSION_KEY);
+        return "mainpage";
+    }
 }

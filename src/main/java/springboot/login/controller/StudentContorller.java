@@ -1,42 +1,75 @@
 package springboot.login.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import springboot.login.WebSecurityConfig;
+import springboot.login.dao.CourseRepository;
+import springboot.login.dao.ScoreRepository;
+import springboot.login.dao.StudentRepository;
+import springboot.login.domain.Course;
+import springboot.login.domain.Score;
 import springboot.login.domain.Student;
 import springboot.login.service.StudentService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static springboot.login.WebSecurityConfig.SESSION_KEY;
+
+
+@Controller
 public class StudentContorller {
+
     @Autowired
-    private StudentService studentService;
+    private CourseRepository courseRepository;
+    @Autowired
+    private ScoreRepository scoreRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
 
 
 
 
 
-    @RequestMapping("/edit")
-    public String edit(Student student){
+    @GetMapping(value="/student/myscore")
+    @ResponseBody
+    public List<Map<String,String>> getScore(HttpServletRequest request){
 
-        studentService.edit(student);
-        return "student/edit";  // to student edit html
-    }
+        List < Map<String,String> > result =new ArrayList<Map<String,String> >();
+        HttpSession session = request.getSession();
+        String email = String.valueOf(session.getAttribute(SESSION_KEY));
 
-    /* edit a student's information */
-    // this function is invoke by student self ,send it self to edit page
-    @RequestMapping("/toEdit")
-    public String toEdit(Model model,Long id) {
-        Student student=studentService.findStudentById(id);
-        model.addAttribute("student", student);
-        return "student/studentEdit";
-    }
+        System.out.println(email);
+
+        Student student = studentRepository.findByEmail(email);
+        List<Score> scoreList =scoreRepository.findByPkStudentId(student.getId());
+
+        for(int i= 0;i<scoreList.size();i++){
+            Map<String,String> map=new HashMap<>();
+            Score score = scoreList.get(i);
+            Course c = score.getCourse();
+            c.getTeacher().getName();
+            map.put("course_id",String.valueOf(c.getId()));
+            map.put("course_code",c.getCourse_code());
+            map.put("course_name",c.getName());
+            map.put("teacher_name", c.getTeacher().getName());
+            map.put("score",String.valueOf(score.getScore()));
+            result.add(map);
+        }
 
 
-    @RequestMapping("/studentInfo")
-    public String showStudentInfo(Model model,Long id){
-        Student student=studentService.findStudentById(id);
-        model.addAttribute("student", student);
-        return "student/studentInfo";
+
+        return result;
     }
 
 //    @RequestMapping("/courseInfo")

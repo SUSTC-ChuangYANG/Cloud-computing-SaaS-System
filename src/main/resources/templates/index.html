@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <!-- begin::Head -->
 <head>
     <meta charset="utf-8"/>
@@ -110,8 +110,7 @@
                                                             <li class="m-nav__separator m-nav__separator--fit"></li>
                                                             <!--logout-->
                                                             <li class="m-nav__item">
-                                                                <a href="mainpage.html"
-                                                                   class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
+                                                                <a href="mainpage.html" th:href="@{/mainpage}" class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
                                                                     Logout
                                                                 </a>
                                                             </li>
@@ -262,7 +261,7 @@
                                     <div class="col-md-4">
                                         <div class="m-input-icon m-input-icon--left">
                                             <input type="text" class="form-control m-input" placeholder="Search..."
-                                                   id="generalSearch">
+                                                   id="generalSearch"/>
                                             <span class="m-input-icon__icon m-input-icon__icon--left">
 															<span>
 																<i class="la la-search"></i>

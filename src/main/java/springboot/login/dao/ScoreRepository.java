@@ -9,4 +9,5 @@ import java.util.List;
 public interface ScoreRepository extends JpaRepository<Score, StudentCoursePk> {
    List<Score> findByPkStudentId(long studentId);
     List<Score> findByPkCourseId(long courseId);
+    Score findByPkStudentIdAndPkCourseId(long studentId,long courseId);
 }
